@@ -91,12 +91,11 @@ def parse_speccy(message, nick, url):
     try:
         z = smartcheck()
         if len(z) != 0:
-            smartstr = ""
+            smartspec = ""
             for item in z:
-                smartstr += " #" + item + " "
-            smartspec = "Failing " + smartstr 
+                smartspec += " #" + item + " "
         else:
-            smartspec = "Good"
+            smartspec = None
     except Exception:
         smartspec = None
 
@@ -110,7 +109,7 @@ def parse_speccy(message, nick, url):
     if not badware:
         badware = None
 
-    specin = "\x02OS:\x02 {} ● \x02RAM:\x02 {} ● \x02CPU:\x02 {} ● \x02GPU:\x02 {} ● \x02Piracy:\x02 {} ● \x02Badware:\x02 {} ● \x02Drive(s):\x02 {}".format(osspec, ramspec, cpuspec, gpuspec, piracy, badware, smartspec)
+    specin = "\x02OS:\x02 {} ● \x02RAM:\x02 {} ● \x02CPU:\x02 {} ● \x02GPU:\x02 {} ● \x02Piracy:\x02 {} ● \x02Badware:\x02 {} ● \x02Failing Drive(s):\x02 {}".format(osspec, ramspec, cpuspec, gpuspec, piracy, badware, smartspec)
 
     specout = re.sub("\s{2,}|\r\n|\n", " ", specin)
 
