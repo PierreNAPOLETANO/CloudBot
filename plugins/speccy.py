@@ -12,14 +12,15 @@ from bs4 import BeautifulSoup as BS
 def get_speccy_url(conn, message, chan, content, nick):
     re_content = re.search(r"https?:\/\/speccy.piriform.com\/results\/[A-z0-9]+", content)
     if re_content:
-        message("({}) Analyzing Speccy URL...".format(nick))
+        # message("({}) Analyzing Speccy URL...".format(nick))
         return parse_speccy(message, nick, str(re_content.group(0)))
 
 def parse_speccy(message, nick, url):
 
     response = requests.get(url)
     if not response:
-        return "Error retrieving speccy URL"
+        #return "Error retrieving speccy URL"
+        return None
 
     soup = BS(response.content, "lxml-xml")
 
@@ -63,12 +64,22 @@ def parse_speccy(message, nick, url):
     except AttributeError:
         boosterspec = None
 
+    try:
+        xtuspec = soup.body.find("div", text=re.compile('.*xtu', re.IGNORECASE)).text
+    except AttributeError:
+        xtuspec = None
+
+    try:
+        reviverspec = soup.body.find("div", text=re.compile('.*reviver', re.IGNORECASE)).text
+    except AttributeError:
+        reviverspec = None
+
     def smartcheck():
         drivespec = soup.body.find_all("div", text="05")
         number_of_drives = len(drivespec)
 
         values = []
-        for i in range(0,number_of_drives):
+        for i in range(0, number_of_drives):
             z = drivespec[i].next_sibling.next_sibling.stripped_strings
             saucy = list(z)
             rv_index = saucy.index("Raw Value:")
@@ -83,17 +94,27 @@ def parse_speccy(message, nick, url):
             smartstr = ""
             for item in z:
                 smartstr += " #" + item + " "
-            smartspec = "Bad " + smartstr 
+            smartspec = "Failing " + smartstr 
         else:
             smartspec = "Good"
     except Exception:
         smartspec = None
 
-    specin = "\x02OS:\x02 {} ● \x02RAM:\x02 {} ● \x02CPU:\x02 {} ● \x02GPU:\x02 {} ● \x02AutoPico:\x02 {} ● \x02KMS:\x02 {} ● \x02Booster:\x02 {} ● \x02Drive(s):\x02 {}".format(osspec, ramspec, cpuspec, gpuspec, picospec, kmsspec, boosterspec, smartspec)
+    piracy_list = [picospec, kmsspec]
+    piracy = ', '.join(filter(None, piracy_list))
+    if not piracy:
+        piracy = None
+
+    badware_list = [boosterspec, xtuspec, reviverspec]
+    badware = ', '.join(filter(None, badware_list))
+    if not badware:
+        badware = None
+
+    specin = "\x02OS:\x02 {} ● \x02RAM:\x02 {} ● \x02CPU:\x02 {} ● \x02GPU:\x02 {} ● \x02Piracy:\x02 {} ● \x02Badware:\x02 {} ● \x02Drive(s):\x02 {}".format(osspec, ramspec, cpuspec, gpuspec, piracy, badware, smartspec)
 
     specout = re.sub("\s{2,}|\r\n|\n", " ", specin)
 
-    if picospec or kmsspec:
-        message("({}) WARNING: Pirated sofware found (AutoPico: {}, KMS: {}). Please be advised we do not support users running software that violates the Terms of Service.".format(nick, picospec, kmsspec))
+    if piracy:
+        message("({}) WARNING: Piracy sofware found ({}). Please be advised we do not support users running software that violates the Terms of Service.".format(nick, piracy))
 
     return specout
