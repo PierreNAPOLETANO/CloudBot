@@ -88,7 +88,7 @@ def parse_speccy(message, nick, url):
         if len(z) != 0:
             smartspec = " Disk:"
             for item in z:
-                smartspec += " #" + item + " "
+                smartspec += item + " "
         else:
             smartspec = None
     except Exception:
