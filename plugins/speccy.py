@@ -93,7 +93,7 @@ def parse_speccy(message, nick, url):
         if len(z) != 0:
             smartspec = ""
             for item in z:
-                smartspec += " #" + item + " "
+                smartspec += item + " "
         else:
             smartspec = None
     except Exception:
@@ -114,6 +114,6 @@ def parse_speccy(message, nick, url):
     specout = re.sub("\s{2,}|\r\n|\n", " ", specin)
 
     if piracy:
-        message("({}) WARNING: Piracy sofware found ({}). Please be advised we do not support users running software that violates the Terms of Service.".format(nick, piracy))
+        message("({}) WARNING: Piracy sofware found ({}). Please note this violates Terms of Service and is not recommended.".format(nick, piracy))
 
     return specout
