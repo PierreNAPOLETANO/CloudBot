@@ -38,9 +38,10 @@ def parse_speccy(message, nick, url):
         cpuspec = None
 
     try:
-        gpufind = soup.body.find("div", text='Graphics').next_sibling.next_sibling.text
-        for gpuspec in re.finditer(r".*(amd|radeon|intel|integrated|nvidia|geforce|gtx).*\n.*", gpufind, re.I):
-            print(gpuspec.group(0)) # <--------- this is proof it works, but I can't make the bot output it right
+       gpufind = soup.body.find("div", text='Graphics').next_sibling.next_sibling.text
+       gpuspec = ""
+       for gpustring in re.finditer(r".*(amd|radeon|intel|integrated|nvidia|geforce|gtx).*\n.*", gpufind, re.IGNORECASE):
+         gpuspec += gpustring.group()
     except AttributeError:
         gpuspec = None
 
@@ -58,12 +59,7 @@ def parse_speccy(message, nick, url):
         boosterspec = soup.body.find("div", text=re.compile('.*booster', re.I)).text
     except AttributeError:
         boosterspec = None
-
-    try:
-        xtuspec = soup.body.find("div", text=re.compile('.*xtu', re.I)).text
-    except AttributeError:
-        xtuspec = None
-
+        
     try:
         reviverspec = soup.body.find("div", text=re.compile('.*reviver', re.I)).text
     except AttributeError:
@@ -88,13 +84,13 @@ def parse_speccy(message, nick, url):
         if len(z) != 0:
             smartspec = " Disk:"
             for item in z:
-                smartspec += item + " "
+                smartspec += " #" + item + " "
         else:
             smartspec = None
     except Exception:
         smartspec = None
 
-    badware_list = [picospec, kmsspec, boosterspec, xtuspec, reviverspec]
+    badware_list = [picospec, kmsspec, boosterspec, reviverspec]
     badware = ', '.join(filter(None, badware_list))
     if not badware:
         badware = None
