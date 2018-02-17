@@ -12,9 +12,9 @@ from cloudbot.event import EventType
 from cloudbot.util import database
 from cloudbot.util.formatting import pluralize_auto
 
-duck_tail = "・゜゜・。。・゜゜"
-duck = ["\_o< ", "\_O< ", "\_0< ", "\_\u00f6< ", "\_\u00f8< ", "\_\u00f3< "]
-duck_noise = ["QUACK!", "FLAP FLAP!", "quack!"]
+duck_tail = " ..____---8 * * ** 8---- __ . __ ---- 8 * 8 ** ----___ "
+duck = [" __\\o/ "]
+duck_noise = ["BARK!", "FLAP FLAP!", "quack!"]
 
 table = Table(
     'duck_hunt',
