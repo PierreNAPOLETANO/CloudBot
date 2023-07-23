@@ -47,16 +47,8 @@ class Client:
         self.loop = bot.loop
         self.name = name
         self.nick = nick
-
-        if channels is None:
-            self.channels = []
-        else:
-            self.channels = channels
-
-        if config is None:
-            self.config = {}
-        else:
-            self.config = config
+        self.channels = [] if channels is None else channels
+        self.config = {} if config is None else config
         self.vars = {}
         self.history = {}
 
